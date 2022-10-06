@@ -2,6 +2,8 @@ library main;
 
 import 'package:flutter/material.dart';
 import 'package:modern_themes/modern_themes.dart';
+import 'package:shoplogy/navigation/routes.dart';
+import 'package:shoplogy/screens/homescreen.dart';
 import 'package:shoplogy/screens/unknown_screen.dart';
 import 'package:string_translate/string_translate.dart'
     hide StandardTranslations, Translate;
@@ -73,7 +75,10 @@ class _ShoplogyState extends State<Shoplogy> {
 
   /// The Routes that don't need any parameters
   Map<String, Widget Function(BuildContext)> get _routes {
-    return {};
+    return {
+      Routes.homeScreen: (_) => const Homescreen(),
+      Routes.unknownScreen: (_) => const UnknownScreen(),
+    };
   }
 
   /// The Unknown Screen that is returned if
