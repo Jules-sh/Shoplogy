@@ -2,7 +2,7 @@ library main;
 
 import 'package:flutter/material.dart';
 import 'package:modern_themes/modern_themes.dart';
-import 'package:shoplogy/navigation/routes.dart';
+import 'package:shoplogy/navigation/routes.dart' show Routes;
 import 'package:shoplogy/screens/homescreen.dart';
 import 'package:shoplogy/screens/unknown_screen.dart';
 import 'package:string_translate/string_translate.dart'
