@@ -29,10 +29,12 @@ class _HomescreenState extends State<Homescreen> {
     );
   }
 
+  /// The AppBar for this particiular Screen
   AppBar get _appBar {
     return AppBar(
       automaticallyImplyLeading: true,
       title: TextField(
+        expands: false,
         dragStartBehavior: DragStartBehavior.down,
         clipBehavior: Clip.antiAliasWithSaveLayer,
         autocorrect: true,
@@ -61,6 +63,9 @@ class _HomescreenState extends State<Homescreen> {
     );
   }
 
+  /// The Body for this Screen.
+  /// This returns a different Widet depending
+  /// on the tab you're on.
   Scrollbar get _body {
     final Set<Scrollbar> s = {
       _shopBody,
@@ -68,6 +73,7 @@ class _HomescreenState extends State<Homescreen> {
     return s.elementAt(_bloc!.cBnbI);
   }
 
+  /// The Body for the Shop Tab.
   Scrollbar get _shopBody {
     return Scrollbar(
       child: _gridBuilder(
@@ -76,6 +82,10 @@ class _HomescreenState extends State<Homescreen> {
     );
   }
 
+  /// A builder to build a grid
+  /// view.
+  /// This is used in all the
+  /// Bodies in this Screen.
   GridView _gridBuilder({
     required Set<ShopItem> items,
   }) {

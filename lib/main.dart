@@ -1,7 +1,9 @@
 library main;
 
+import 'package:bloc_implementation/bloc_implementation.dart';
 import 'package:flutter/material.dart';
 import 'package:modern_themes/modern_themes.dart';
+import 'package:shoplogy/blocs/home_bloc.dart';
 import 'package:shoplogy/navigation/routes.dart' show Routes;
 import 'package:shoplogy/screens/homescreen.dart';
 import 'package:shoplogy/screens/unknown_screen.dart';
@@ -76,7 +78,10 @@ class _ShoplogyState extends State<Shoplogy> {
   /// The Routes that don't need any parameters
   Map<String, Widget Function(BuildContext)> get _routes {
     return {
-      Routes.homeScreen: (_) => const Homescreen(),
+      Routes.homeScreen: (_) => BlocParent(
+            bloc: HomeBloc(),
+            child: const Homescreen(),
+          ),
       Routes.unknownScreen: (_) => const UnknownScreen(),
     };
   }
