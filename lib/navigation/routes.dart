@@ -1,6 +1,7 @@
 library navigation;
 
 import '../screens/homescreen.dart';
+import '../screens/item_details_screen.dart';
 import '../screens/unknown_screen.dart';
 
 /// The Type for all Routes in this App
@@ -16,4 +17,8 @@ class Routes {
   /// The Route Name for
   /// the [Homescreen] in this App.
   static const Route homeScreen = '/';
+
+  /// Route Name
+  /// for the [ItemDetailsScreen].
+  static const Route itemDetails = '/itemDetails';
 }

@@ -17,6 +17,10 @@ class Homescreen extends StatefulWidget {
 }
 
 class _HomescreenState extends State<Homescreen> {
+  /// The Bloc that is
+  /// resposible for all the Logic
+  /// needed while the User is on this
+  /// Screen.
   HomeBloc? _bloc;
 
   @override

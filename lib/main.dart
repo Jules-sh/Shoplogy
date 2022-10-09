@@ -1,11 +1,14 @@
 library main;
 
 import 'package:bloc_implementation/bloc_implementation.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:modern_themes/modern_themes.dart';
 import 'package:shoplogy/blocs/home_bloc.dart';
+import 'package:shoplogy/models/shop_item.dart';
 import 'package:shoplogy/navigation/routes.dart' show Routes;
 import 'package:shoplogy/screens/homescreen.dart';
+import 'package:shoplogy/screens/item_details_screen.dart';
 import 'package:shoplogy/screens/unknown_screen.dart';
 import 'package:string_translate/string_translate.dart'
     hide StandardTranslations, Translate;
@@ -72,6 +75,7 @@ class _ShoplogyState extends State<Shoplogy> {
       initialRoute: '/',
       routes: _routes,
       onUnknownRoute: _onUnknownRoute,
+      onGenerateRoute: _onGenerateRoute,
     );
   }
 
@@ -83,6 +87,26 @@ class _ShoplogyState extends State<Shoplogy> {
             child: const Homescreen(),
           ),
       Routes.unknownScreen: (_) => const UnknownScreen(),
+    };
+  }
+
+  /// contains nearly all
+  /// Routes that have a
+  /// parameter to pass.
+  MaterialPageRoute Function(RouteSettings) get _onGenerateRoute {
+    return (settings) {
+      late final Widget screen;
+      final dynamic args = settings.arguments;
+
+      switch (settings.name) {
+        case Routes.itemDetails:
+          screen = ItemDetailsScreen(item: args as ShopItem);
+          break;
+        default:
+          screen = const UnknownScreen();
+          break;
+      }
+      return MaterialPageRoute(builder: (_) => screen);
     };
   }
 
