@@ -1,7 +1,6 @@
 library main;
 
-import 'package:bloc_implementation/bloc_implementation.dart';
-import 'package:flutter/foundation.dart';
+import 'package:bloc_implementation/bloc_implementation.dart' show BlocParent;
 import 'package:flutter/material.dart';
 import 'package:modern_themes/modern_themes.dart';
 import 'package:shoplogy/blocs/home_bloc.dart';

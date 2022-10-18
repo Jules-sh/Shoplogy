@@ -5,7 +5,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shoplogy/blocs/home_bloc.dart';
-import 'package:shoplogy/components/item_grid.dart';
+import 'package:shoplogy/components/item_grid_tile.dart';
 import 'package:shoplogy/models/shop_item.dart';
 
 /// The Standard Homescreen of this App.
@@ -108,7 +108,7 @@ class _HomescreenState extends State<Homescreen> {
         crossAxisCount: 2,
       ),
       itemBuilder: (_, counter) {
-        return ItemGrid(
+        return ItemGridTile(
           item: items.elementAt(counter),
         );
       },

@@ -1,6 +1,6 @@
 library models;
 
-import 'package:flutter/material.dart' show Icon, Icons;
+import 'package:flutter/material.dart' show IconData, Icons, Image;
 
 /// The Model that represents every single
 /// Item in this App.
@@ -8,6 +8,8 @@ class ShopItem {
   const ShopItem({
     required this.name,
     required this.price,
+    this.description,
+    this.images,
     this.icon,
   });
 
@@ -20,14 +22,23 @@ class ShopItem {
 
   /// An optional Icon to present this
   /// Item in the Shop
-  final Icon? icon;
+  final IconData? icon;
+
+  /// A List
+  /// of different Images
+  /// to present the Item.
+  final List<Image>? images;
+
+  /// A closer and more precise
+  /// Description of this Item.
+  final String? description;
 
   /// All the Items in this App.
   static final Set<ShopItem> allItems = {
     const ShopItem(
       name: 'Diamond',
       price: 100.00,
-      icon: Icon(Icons.diamond),
+      icon: Icons.diamond,
     ),
   };
 }

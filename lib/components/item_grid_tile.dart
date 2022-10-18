@@ -1,6 +1,6 @@
 library components;
 
-import 'package:flutter/gestures.dart';
+import 'package:flutter/gestures.dart' show DragStartBehavior;
 import 'package:flutter/material.dart';
 import 'package:modern_themes/modern_themes.dart' show Coloring;
 import 'package:shoplogy/models/shop_item.dart';
@@ -11,8 +11,8 @@ import 'package:shoplogy/navigation/routes.dart';
 /// Item in this App.
 /// Used to represent the Item in different
 /// Screens.
-class ItemGrid extends StatefulWidget {
-  const ItemGrid({
+class ItemGridTile extends StatefulWidget {
+  const ItemGridTile({
     required this.item,
     super.key,
   });
@@ -21,10 +21,10 @@ class ItemGrid extends StatefulWidget {
   final ShopItem item;
 
   @override
-  State<StatefulWidget> createState() => _ItemGridState();
+  State<StatefulWidget> createState() => _ItemGridTileState();
 }
 
-class _ItemGridState extends State<ItemGrid> {
+class _ItemGridTileState extends State<ItemGridTile> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -52,7 +52,7 @@ class _ItemGridState extends State<ItemGrid> {
             children: [
               widget.item.icon != null
                   ? Icon(
-                      widget.item.icon!.icon,
+                      widget.item.icon,
                       size: 100,
                     )
                   : const Icon(
