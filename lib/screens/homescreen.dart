@@ -73,6 +73,7 @@ class _HomescreenState extends State<Homescreen> {
   Scrollbar get _body {
     final Set<Scrollbar> s = {
       _shopBody,
+      _inventoryBody,
     };
     return s.elementAt(_bloc!.cBnbI);
   }
@@ -83,6 +84,19 @@ class _HomescreenState extends State<Homescreen> {
       child: _gridBuilder(
         items: ShopItem.allItems,
       ),
+    );
+  }
+
+  Scrollbar get _inventoryBody {
+    return Scrollbar(child: Container());
+  }
+
+  BottomNavigationBar get bnb {
+    return BottomNavigationBar(
+      items: [
+        BottomNavigationBarItem(icon: Icon(Icons.inventory))
+      ],
+      currentIndex: _bloc!.cBnbI,
     );
   }
 
