@@ -11,6 +11,7 @@ class ShopItem {
     this.description,
     this.images,
     this.icon,
+    this.amount = double.infinity,
   });
 
   /// The Name of this Item
@@ -27,11 +28,15 @@ class ShopItem {
   /// A List
   /// of different Images
   /// to present the Item.
-  final List<Image>? images;
+  final Set<Image>? images;
 
   /// A closer and more precise
   /// Description of this Item.
   final String? description;
+
+  /// The Amount the User has
+  /// of this Object.
+  final double amount;
 
   /// All the Items in this App.
   static final Set<ShopItem> allItems = {

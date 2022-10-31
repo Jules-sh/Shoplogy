@@ -47,7 +47,9 @@ class _HomescreenState extends State<Homescreen> {
         enableIMEPersonalizedLearning: true,
         enableInteractiveSelection: true,
         enableSuggestions: true,
-        keyboardAppearance: Theme.of(context).brightness,
+        keyboardAppearance: Theme
+            .of(context)
+            .brightness,
         keyboardType: TextInputType.text,
         maxLines: 1,
         minLines: 1,
