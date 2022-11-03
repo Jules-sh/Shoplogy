@@ -8,6 +8,7 @@ import 'package:shoplogy/blocs/home_bloc.dart';
 import 'package:shoplogy/components/item_grid_tile.dart';
 import 'package:shoplogy/models/shop_item.dart';
 import 'package:shoplogy/models/users.dart';
+import 'package:shoplogy/navigation/routes.dart';
 import 'package:string_translate/string_translate.dart';
 
 /// The Standard Homescreen of this App.
@@ -40,13 +41,44 @@ class _HomescreenState extends State<Homescreen> {
   AppBar get _appBar {
     return AppBar(
       automaticallyImplyLeading: true,
-      actions: <IconButton>[
-        IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.account_circle),
-        )
-      ],
+      leading: IconButton(
+        onPressed: () {
+          Navigator.pushNamed(
+            context,
+            Routes.userScreen,
+            arguments: User.currentUser,
+          );
+        },
+        icon: const Icon(Icons.account_circle),
+      ),
       title: TextField(
+        clipBehavior: Clip.antiAliasWithSaveLayer,
+        autocorrect: true,
+        autofocus: false,
+        dragStartBehavior: DragStartBehavior.down,
+        enabled: true,
+        enableIMEPersonalizedLearning: true,
+        enableInteractiveSelection: true,
+        enableSuggestions: true,
+        keyboardAppearance: Theme.of(context).brightness,
+        obscureText: false,
+        keyboardType: TextInputType.text,
+        readOnly: false,
+        scribbleEnabled: true,
+        scrollPhysics: const BouncingScrollPhysics(),
+        smartDashesType: SmartDashesType.enabled,
+        smartQuotesType: SmartQuotesType.enabled,
+        textAlign: TextAlign.start,
+        textAlignVertical: TextAlignVertical.center,
+        textCapitalization: TextCapitalization.words,
+        textDirection: TextDirection.ltr,
+        textInputAction: TextInputAction.search,
+        toolbarOptions: const ToolbarOptions(
+          copy: true,
+          cut: true,
+          paste: true,
+          selectAll: true,
+        ),
         decoration: InputDecoration(
           alignLabelWithHint: true,
           enabled: true,
@@ -59,7 +91,7 @@ class _HomescreenState extends State<Homescreen> {
           ),
           border: const UnderlineInputBorder(
             borderRadius: BorderRadius.all(
-              Radius.circular(05),
+              Radius.circular(5),
             ),
             borderSide: BorderSide(
               color: Colors.white70,
@@ -69,7 +101,7 @@ class _HomescreenState extends State<Homescreen> {
           ),
           errorBorder: const UnderlineInputBorder(
             borderRadius: BorderRadius.all(
-              Radius.circular(05),
+              Radius.circular(5),
             ),
             borderSide: BorderSide(
               color: Colors.white70,
@@ -79,7 +111,7 @@ class _HomescreenState extends State<Homescreen> {
           ),
           enabledBorder: const UnderlineInputBorder(
             borderRadius: BorderRadius.all(
-              Radius.circular(05),
+              Radius.circular(5),
             ),
             borderSide: BorderSide(
               color: Colors.white70,
@@ -89,7 +121,7 @@ class _HomescreenState extends State<Homescreen> {
           ),
           focusedBorder: const UnderlineInputBorder(
             borderRadius: BorderRadius.all(
-              Radius.circular(05),
+              Radius.circular(5),
             ),
             borderSide: BorderSide(
               color: Colors.white70,
@@ -99,7 +131,7 @@ class _HomescreenState extends State<Homescreen> {
           ),
           disabledBorder: const UnderlineInputBorder(
             borderRadius: BorderRadius.all(
-              Radius.circular(05),
+              Radius.circular(5),
             ),
             borderSide: BorderSide(
               color: Colors.white70,
@@ -109,12 +141,12 @@ class _HomescreenState extends State<Homescreen> {
           ),
           focusedErrorBorder: const UnderlineInputBorder(
             borderRadius: BorderRadius.all(
-              Radius.circular(05),
+              Radius.circular(5),
             ),
             borderSide: BorderSide(
               color: Colors.white70,
               style: BorderStyle.solid,
-              width: 0.5,
+              width: .5,
             ),
           ),
         ),
@@ -123,7 +155,7 @@ class _HomescreenState extends State<Homescreen> {
   }
 
   /// The Body for this Screen.
-  /// This returns a different Widet depending
+  /// This returns a different Widget depending
   /// on the tab you're on.
   Scrollbar get _body {
     final Set<Scrollbar> s = {

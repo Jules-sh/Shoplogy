@@ -1,5 +1,7 @@
 library navigation;
 
+import 'package:shoplogy/screens/user_screen.dart';
+
 import '../screens/homescreen.dart';
 import '../screens/item_details_screen.dart';
 import '../screens/unknown_screen.dart';
@@ -21,4 +23,8 @@ class Routes {
   /// Route Name
   /// for the [ItemDetailsScreen].
   static const Route itemDetails = '/itemDetails';
+
+  /// Route Name for the
+  /// [UserScreen]
+  static const Route userScreen = '/user';
 }
