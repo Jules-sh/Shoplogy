@@ -3,7 +3,6 @@ library screens;
 import 'package:bloc_implementation/bloc_implementation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:modern_themes/modern_themes_comps.dart';
 import 'package:shoplogy/blocs/home_bloc.dart';
 import 'package:shoplogy/components/item_grid_tile.dart';
@@ -21,7 +20,7 @@ class Homescreen extends StatefulWidget {
 
 class _HomescreenState extends State<Homescreen> {
   /// The Bloc that is
-  /// resposible for all the Logic
+  /// responsible for all the Logic
   /// needed while the User is on this
   /// Screen.
   HomeBloc? _bloc;
@@ -37,36 +36,88 @@ class _HomescreenState extends State<Homescreen> {
     );
   }
 
-  /// The AppBar for this particiular Screen
+  /// The AppBar for this particular Screen
   AppBar get _appBar {
     return AppBar(
       automaticallyImplyLeading: true,
+      actions: <IconButton>[
+        IconButton(
+          onPressed: () {},
+          icon: const Icon(Icons.account_circle),
+        )
+      ],
       title: TextField(
-        expands: false,
-        dragStartBehavior: DragStartBehavior.down,
-        clipBehavior: Clip.antiAliasWithSaveLayer,
-        autocorrect: true,
-        autofocus: false,
-        enabled: true,
-        enableIMEPersonalizedLearning: true,
-        enableInteractiveSelection: true,
-        enableSuggestions: true,
-        keyboardAppearance: Theme.of(context).brightness,
-        keyboardType: TextInputType.text,
-        maxLines: 1,
-        minLines: 1,
-        maxLengthEnforcement: MaxLengthEnforcement.truncateAfterCompositionEnds,
-        obscureText: false,
-        readOnly: false,
-        scribbleEnabled: true,
-        scrollPhysics: const BouncingScrollPhysics(),
-        smartDashesType: SmartDashesType.enabled,
-        smartQuotesType: SmartQuotesType.enabled,
-        textAlign: TextAlign.start,
-        textAlignVertical: TextAlignVertical.center,
-        textCapitalization: TextCapitalization.words,
-        textDirection: TextDirection.ltr,
-        textInputAction: TextInputAction.search,
+        decoration: InputDecoration(
+          alignLabelWithHint: true,
+          enabled: true,
+          filled: false,
+          floatingLabelAlignment: FloatingLabelAlignment.start,
+          floatingLabelBehavior: FloatingLabelBehavior.auto,
+          hintText: 'Search something...'.tr(),
+          hintStyle: TextStyle(
+            color: Coloring.secondaryColor,
+          ),
+          border: const UnderlineInputBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(05),
+            ),
+            borderSide: BorderSide(
+              color: Colors.white70,
+              style: BorderStyle.solid,
+              width: 1.5,
+            ),
+          ),
+          errorBorder: const UnderlineInputBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(05),
+            ),
+            borderSide: BorderSide(
+              color: Colors.white70,
+              style: BorderStyle.solid,
+              width: 1.5,
+            ),
+          ),
+          enabledBorder: const UnderlineInputBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(05),
+            ),
+            borderSide: BorderSide(
+              color: Colors.white70,
+              style: BorderStyle.solid,
+              width: 1.5,
+            ),
+          ),
+          focusedBorder: const UnderlineInputBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(05),
+            ),
+            borderSide: BorderSide(
+              color: Colors.white70,
+              style: BorderStyle.solid,
+              width: 1.5,
+            ),
+          ),
+          disabledBorder: const UnderlineInputBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(05),
+            ),
+            borderSide: BorderSide(
+              color: Colors.white70,
+              style: BorderStyle.solid,
+              width: 1.5,
+            ),
+          ),
+          focusedErrorBorder: const UnderlineInputBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(05),
+            ),
+            borderSide: BorderSide(
+              color: Colors.white70,
+              style: BorderStyle.solid,
+              width: 0.5,
+            ),
+          ),
+        ),
       ),
     );
   }

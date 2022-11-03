@@ -45,5 +45,15 @@ class ShopItem {
       price: 100.00,
       icon: Icons.diamond,
     ),
+    const ShopItem(
+      name: 'Clock',
+      price: 20.00,
+      icon: Icons.timelapse,
+    ),
+    const ShopItem(
+      name: 'Car',
+      price: 20000.00,
+      icon: Icons.car_rental,
+    ),
   };
 }

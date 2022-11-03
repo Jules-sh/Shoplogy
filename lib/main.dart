@@ -4,6 +4,7 @@ import 'package:bloc_implementation/bloc_implementation.dart' show BlocParent;
 import 'package:flutter/material.dart';
 import 'package:modern_themes/modern_themes.dart';
 import 'package:shoplogy/blocs/home_bloc.dart';
+import 'package:shoplogy/localizations/translations.dart';
 import 'package:shoplogy/models/shop_item.dart';
 import 'package:shoplogy/navigation/routes.dart' show Routes;
 import 'package:shoplogy/screens/homescreen.dart';
@@ -30,8 +31,7 @@ class _ShoplogyState extends State<Shoplogy> {
     Translation.init(
       supportedLocales: TranslationLocales.all,
       defaultLocale: TranslationLocales.english,
-      // TODO: add translations
-      translations: {},
+      translations: translations,
     );
     super.initState();
   }
