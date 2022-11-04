@@ -10,7 +10,6 @@ class User {
   User({
     required this.name,
     required this.lastname,
-    required this.items,
     Set<Permission> permissions = const {},
   });
 
@@ -18,7 +17,6 @@ class User {
   User.admin({
     required this.name,
     required this.lastname,
-    required this.items,
   }) {
     _permissions = {};
   }
@@ -27,7 +25,6 @@ class User {
   User.anonymous({
     this.name = '',
     this.lastname = '',
-    this.items = const {},
   });
 
   /// First Name of the User
@@ -37,7 +34,7 @@ class User {
   final String lastname;
 
   /// All the Items the User has
-  final Set<ShopItem> items;
+  Set<ShopItem> items = {};
 
   /// The Permissions this User has.
   late final Set<Permission> _permissions;
@@ -56,6 +53,12 @@ class User {
   /// the specified [newUser].
   static void changeUser(User newUser) {
     _currentUser = newUser;
+  }
+
+  /// Whether the User
+  /// exists or not.
+  bool get exists {
+    return name.isNotEmpty && lastname.isNotEmpty;
   }
 
   /// Whether the User has the Permission

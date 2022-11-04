@@ -4,9 +4,9 @@ import 'package:bloc_implementation/bloc_implementation.dart' show BlocParent;
 import 'package:flutter/material.dart';
 import 'package:modern_themes/modern_themes.dart';
 import 'package:shoplogy/blocs/home_bloc.dart';
+import 'package:shoplogy/blocs/user_bloc.dart';
 import 'package:shoplogy/localizations/translations.dart';
 import 'package:shoplogy/models/shop_item.dart';
-import 'package:shoplogy/models/users.dart';
 import 'package:shoplogy/navigation/routes.dart' show Routes;
 import 'package:shoplogy/screens/homescreen.dart';
 import 'package:shoplogy/screens/item_details_screen.dart';
@@ -87,6 +87,10 @@ class _ShoplogyState extends State<Shoplogy> {
             bloc: HomeBloc(),
             child: const Homescreen(),
           ),
+      Routes.userScreen: (_) => BlocParent(
+            bloc: UserBloc(),
+            child: const UserScreen(),
+          ),
       Routes.unknownScreen: (_) => const UnknownScreen(),
     };
   }
@@ -102,9 +106,6 @@ class _ShoplogyState extends State<Shoplogy> {
       switch (settings.name) {
         case Routes.itemDetails:
           screen = ItemDetailsScreen(item: args as ShopItem);
-          break;
-        case Routes.userScreen:
-          screen = UserScreen(user: args as User);
           break;
         default:
           screen = const UnknownScreen();

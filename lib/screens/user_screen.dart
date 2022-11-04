@@ -1,8 +1,9 @@
 library screens;
 
-import 'package:flutter/gestures.dart';
+import 'package:bloc_implementation/bloc_implementation.dart';
+import 'package:flutter/gestures.dart' show DragStartBehavior;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:shoplogy/blocs/user_bloc.dart';
 import 'package:shoplogy/models/users.dart';
 import 'package:string_translate/string_translate.dart' show Translate;
 
@@ -10,31 +11,29 @@ import 'package:string_translate/string_translate.dart' show Translate;
 /// logged in Users Data
 class UserScreen extends StatefulWidget {
   const UserScreen({
-    required this.user,
     Key? key,
   }) : super(key: key);
-
-  /// The User this Screen represents.
-  final User user;
 
   @override
   State<StatefulWidget> createState() => _UserScreenState();
 }
 
 class _UserScreenState extends State<UserScreen> {
-  bool _loggingIn = false;
+  UserBloc? _bloc;
 
   @override
   Widget build(BuildContext context) {
-    if (widget.user != User.anonymous()) {
-      return Scaffold(
-        appBar: _anonymousAppBar,
-        body: _anonymousBody,
-      );
-    } else {
+    _bloc ??= BlocParent.of(context);
+
+    if (User.currentUser.exists) {
       return Scaffold(
         appBar: _appBar,
         body: _body,
+      );
+    } else {
+      return Scaffold(
+        appBar: _anonymousAppBar,
+        body: _anonymousBody,
       );
     }
   }
@@ -44,7 +43,7 @@ class _UserScreenState extends State<UserScreen> {
   AppBar get _anonymousAppBar {
     return AppBar(
       automaticallyImplyLeading: true,
-      title: Text(_loggingIn ? 'Log in'.tr() : 'User'.tr()),
+      title: Text(_bloc!.loggingIn ? 'Log in'.tr() : 'User'.tr()),
     );
   }
 
@@ -53,7 +52,7 @@ class _UserScreenState extends State<UserScreen> {
   AppBar get _appBar {
     return AppBar(
       automaticallyImplyLeading: true,
-      title: Text(widget.user.name),
+      title: Text(User.currentUser.name),
     );
   }
 
@@ -68,7 +67,7 @@ class _UserScreenState extends State<UserScreen> {
         mainAxisSize: MainAxisSize.min,
         textBaseline: TextBaseline.alphabetic,
         verticalDirection: VerticalDirection.down,
-        children: _loggingIn ? _logInChildren : _anonymousChildren,
+        children: _bloc!.loggingIn ? _logInChildren : _anonymousChildren,
       ),
     );
   }
@@ -93,7 +92,7 @@ class _UserScreenState extends State<UserScreen> {
           clipBehavior: Clip.antiAliasWithSaveLayer,
           onPressed: () {
             setState(() {
-              _loggingIn = true;
+              _bloc!.loggingIn = true;
             });
           },
           child: Text('Log in'.tr()),
@@ -104,27 +103,91 @@ class _UserScreenState extends State<UserScreen> {
 
   /// Children of the Column when the User is logging in
   List<Widget> get _logInChildren {
-    return [
-      _logInTextField('Name'.tr()),
-      _logInTextField('Lastname'.tr()),
+    return <Widget>[
+      SizedBox(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height / 10,
+        child: FittedBox(
+          clipBehavior: Clip.antiAliasWithSaveLayer,
+          fit: BoxFit.fitHeight,
+          alignment: Alignment.center,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 100),
+            child: Text(
+              '''
+Please enter your name and your lastname to log in
+The Admin key is not required
+If you have an Admin Key,
+you can add it to enter admin mode.
+              '''
+                  .tr(),
+              textAlign: TextAlign.start,
+              textDirection: TextDirection.ltr,
+              textWidthBasis: TextWidthBasis.longestLine,
+              maxLines: 10,
+              overflow: TextOverflow.fade,
+              softWrap: true,
+            ),
+          ),
+        ),
+      ),
+      _logInTextField('Name'.tr(), onChanged: (s) => _bloc!.name = s),
+      _logInTextField('Lastname'.tr(), onChanged: (s) => _bloc!.lastname = s),
       _logInTextField(
         'Admin Key'.tr(),
+        onChanged: (s) => _bloc!.adminKey = s,
         obscure: true,
         textInputAction: TextInputAction.done,
         textInputType: TextInputType.visiblePassword,
       ),
-      SizedBox(
-        width: MediaQuery.of(context).size.width / 1.5,
-        child: TextButton(
-          autofocus: true,
-          clipBehavior: Clip.antiAliasWithSaveLayer,
-          onPressed: () {
-            setState(() {
-              _loggingIn = false;
-            });
-          },
-          child: Text('Cancel'.tr()),
-        ),
+      Row(
+        textDirection: TextDirection.ltr,
+        verticalDirection: VerticalDirection.down,
+        textBaseline: TextBaseline.alphabetic,
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(
+            width: MediaQuery.of(context).size.width / 2.5,
+            child: TextButton(
+              autofocus: true,
+              clipBehavior: Clip.antiAliasWithSaveLayer,
+              onPressed: () {
+                setState(() {
+                  _bloc!.loggingIn = false;
+                });
+              },
+              child: Text('Cancel'.tr()),
+            ),
+          ),
+          SizedBox(
+            width: MediaQuery.of(context).size.width / 2.5,
+            child: _bloc!.readyToLogIn()
+                ? TextButton(
+                    autofocus: true,
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    onPressed: () => setState(() {
+                      if (_bloc!.logIn()) {
+                        return;
+                      } else {
+                        // TODO: Add Error Code
+                      }
+                    }),
+                    child: Text('Log in'.tr()),
+                  )
+                : TextButton(
+                    autofocus: true,
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Colors.grey),
+                    ),
+                    onPressed: null,
+                    child: Text('Log in'.tr()),
+                  ),
+          ),
+        ],
       ),
     ];
   }
@@ -133,6 +196,7 @@ class _UserScreenState extends State<UserScreen> {
   /// a single Information to log in.
   Padding _logInTextField(
     String textFieldName, {
+    required void Function(String) onChanged,
     TextInputAction textInputAction = TextInputAction.next,
     TextInputType textInputType = TextInputType.name,
     bool obscure = false,
@@ -171,12 +235,22 @@ class _UserScreenState extends State<UserScreen> {
         decoration: InputDecoration(
           hintText: textFieldName,
         ),
+        onChanged: (s) => {onChanged(s), _bloc!.readyToLogIn()},
+        onSubmitted: (s) => {onChanged(s), _bloc!.readyToLogIn()},
       ),
     );
   }
 
   /// The Body that represents the User.
   Widget get _body {
-    return Container();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.max,
+      textBaseline: TextBaseline.alphabetic,
+      verticalDirection: VerticalDirection.down,
+      textDirection: TextDirection.ltr,
+      children: [],
+    );
   }
 }
