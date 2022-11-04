@@ -3,6 +3,7 @@ library blocs;
 import 'package:bloc_implementation/bloc_implementation.dart' show Bloc;
 import 'package:shoplogy/models/permissions.dart';
 import 'package:shoplogy/models/users.dart';
+import 'package:shoplogy/storage/storage.dart';
 
 class UserBloc extends Bloc {
   bool loggingIn = false;
@@ -30,6 +31,7 @@ class UserBloc extends Bloc {
       );
     }
     User.changeUser(user);
+    Storage.store();
     loggingIn = false;
     return true;
   }

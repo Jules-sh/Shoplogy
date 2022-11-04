@@ -3,6 +3,8 @@ library screens;
 import 'package:flutter/gestures.dart' show DragStartBehavior;
 import 'package:flutter/material.dart';
 import 'package:shoplogy/models/shop_item.dart';
+import 'package:shoplogy/models/users.dart';
+import 'package:string_translate/string_translate.dart' show Translate;
 
 /// Shows detailed Information
 /// about a single [item].
@@ -33,6 +35,9 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
   /// The Appbar for this Screen.
   AppBar get _appBar {
     return AppBar(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.zero),
+      ),
       automaticallyImplyLeading: true,
       title: Text(widget.item.name),
     );
@@ -41,16 +46,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
   /// Body of this Screen.
   Scrollbar get _body {
     return Scrollbar(
-      child: ListView(
-        addAutomaticKeepAlives: true,
-        addRepaintBoundaries: true,
-        addSemanticIndexes: true,
-        clipBehavior: Clip.antiAliasWithSaveLayer,
-        dragStartBehavior: DragStartBehavior.down,
-        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-        reverse: false,
-        scrollDirection: Axis.vertical,
-        physics: const BouncingScrollPhysics(),
+      child: Column(
         children: [
           SizedBox(
             height: MediaQuery.of(context).size.height / 4,
@@ -69,9 +65,37 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
           ),
           _title,
           _price,
+          SizedBox(
+            width: MediaQuery.of(context).size.width / 1.2,
+            child: TextButton(
+              onPressed: () {
+                setState(() {
+                  User.currentUser.buy(widget.item);
+                });
+              },
+              child: Text('Buy'.tr()),
+            ),
+          ),
+          _amountOwned,
         ],
       ),
     );
+  }
+
+  /// The Amount the user owns
+  /// of this item.
+  Text get _amountOwned {
+    final String text;
+    if (User.currentUser.hasItem(widget.item)) {
+      text = User.currentUser.items
+          .where((element) => element == widget.item)
+          .first
+          .amount
+          .toString();
+    } else {
+      text = '0';
+    }
+    return Text(text);
   }
 
   /// The Images

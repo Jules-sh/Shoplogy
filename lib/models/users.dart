@@ -85,6 +85,10 @@ class User {
     money += amount;
   }
 
+  bool hasItem(ShopItem item) {
+    return items.contains(item);
+  }
+
   /// Buys an Item.
   void buy(ShopItem item) {
     items.add(item);

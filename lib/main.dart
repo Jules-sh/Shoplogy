@@ -12,10 +12,12 @@ import 'package:shoplogy/screens/homescreen.dart';
 import 'package:shoplogy/screens/item_details_screen.dart';
 import 'package:shoplogy/screens/unknown_screen.dart';
 import 'package:shoplogy/screens/user_screen.dart';
+import 'package:shoplogy/storage/storage.dart';
 import 'package:string_translate/string_translate.dart'
     hide StandardTranslations, Translate;
 
-void main() {
+void main() async {
+  await Storage.init();
   runApp(const Shoplogy());
 }
 

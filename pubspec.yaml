@@ -38,6 +38,10 @@ dependencies:
   modern_themes: ^1.5.1
   string_translate: ^1.4.4
 
+
+  # Flutter Team
+  shared_preferences: ^2.0.15
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.5

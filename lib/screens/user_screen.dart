@@ -112,7 +112,7 @@ class _UserScreenState extends State<UserScreen> {
     return <Widget>[
       SizedBox(
         width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height / 10,
+        height: MediaQuery.of(context).size.height / 9,
         child: FittedBox(
           clipBehavior: Clip.antiAliasWithSaveLayer,
           fit: BoxFit.fitHeight,
