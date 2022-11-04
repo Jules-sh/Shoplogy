@@ -40,6 +40,9 @@ class _HomescreenState extends State<Homescreen> {
   /// The AppBar for this particular Screen
   AppBar get _appBar {
     return AppBar(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.zero),
+      ),
       automaticallyImplyLeading: true,
       leading: IconButton(
         onPressed: () {
@@ -243,7 +246,23 @@ class _HomescreenState extends State<Homescreen> {
       );
     } else {
       return Center(
-        child: Text('No Items'.tr()),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          textDirection: TextDirection.ltr,
+          verticalDirection: VerticalDirection.down,
+          textBaseline: TextBaseline.alphabetic,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.highlight_off,
+              size: 100,
+            ),
+            const SizedBox(height: 10),
+            Text('No Items here'.tr(),
+                style: const TextStyle(fontWeight: FontWeight.bold)),
+          ],
+        ),
       );
     }
   }

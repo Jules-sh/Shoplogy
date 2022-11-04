@@ -11,7 +11,9 @@ class User {
     required this.name,
     required this.lastname,
     Set<Permission> permissions = const {},
-  });
+  }) {
+    _isAdmin = false;
+  }
 
   /// Admin Constructor used for Admins only
   User.admin({
@@ -19,13 +21,16 @@ class User {
     required this.lastname,
   }) {
     _permissions = {};
+    _isAdmin = true;
   }
 
   /// An Anonymous User.
   User.anonymous({
     this.name = '',
     this.lastname = '',
-  });
+  }) {
+    _isAdmin = false;
+  }
 
   /// First Name of the User
   final String name;
@@ -38,6 +43,12 @@ class User {
 
   /// The Permissions this User has.
   late final Set<Permission> _permissions;
+
+  /// Whether this User is an Admin or not.
+  late final bool _isAdmin;
+
+  /// Whether this User is an Admin or not.
+  bool get isAdmin => _isAdmin;
 
   /// The Amount of money the user has.
   double money = 0;

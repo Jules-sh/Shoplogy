@@ -1,6 +1,6 @@
 library screens;
 
-import 'package:bloc_implementation/bloc_implementation.dart';
+import 'package:bloc_implementation/bloc_implementation.dart' show BlocParent;
 import 'package:flutter/gestures.dart' show DragStartBehavior;
 import 'package:flutter/material.dart';
 import 'package:shoplogy/blocs/user_bloc.dart';
@@ -42,6 +42,9 @@ class _UserScreenState extends State<UserScreen> {
   /// logged in
   AppBar get _anonymousAppBar {
     return AppBar(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.zero),
+      ),
       automaticallyImplyLeading: true,
       title: Text(_bloc!.loggingIn ? 'Log in'.tr() : 'User'.tr()),
     );
@@ -51,6 +54,9 @@ class _UserScreenState extends State<UserScreen> {
   /// logged in.
   AppBar get _appBar {
     return AppBar(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.zero),
+      ),
       automaticallyImplyLeading: true,
       title: Text(User.currentUser.name),
     );
@@ -235,22 +241,54 @@ you can add it to enter admin mode.
         decoration: InputDecoration(
           hintText: textFieldName,
         ),
-        onChanged: (s) => {onChanged(s), _bloc!.readyToLogIn()},
-        onSubmitted: (s) => {onChanged(s), _bloc!.readyToLogIn()},
+        onChanged: (s) => {
+          setState(() => {onChanged(s), _bloc!.readyToLogIn()})
+        },
+        onSubmitted: (s) => {
+          setState(() => {onChanged(s), _bloc!.readyToLogIn()})
+        },
       ),
     );
   }
 
   /// The Body that represents the User.
   Widget get _body {
+    final User u = User.currentUser;
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
       mainAxisSize: MainAxisSize.max,
       textBaseline: TextBaseline.alphabetic,
       verticalDirection: VerticalDirection.down,
       textDirection: TextDirection.ltr,
-      children: [],
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        ListView(
+          shrinkWrap: true,
+          scrollDirection: Axis.vertical,
+          reverse: false,
+          physics: const BouncingScrollPhysics(),
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+          dragStartBehavior: DragStartBehavior.down,
+          clipBehavior: Clip.antiAliasWithSaveLayer,
+          addAutomaticKeepAlives: true,
+          addRepaintBoundaries: true,
+          addSemanticIndexes: true,
+          children: [
+            ListTile(
+              title: Text('Name'.tr()),
+              subtitle: Text(u.name),
+            ),
+            ListTile(
+              title: Text('Lastname'.tr()),
+              subtitle: Text(u.lastname),
+            ),
+            ListTile(
+              title: Text('Mode'.tr()),
+              subtitle: Text(u.isAdmin ? 'Admin'.tr() : 'Normal'.tr()),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
