@@ -1,7 +1,7 @@
 library storage;
 
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:shoplogy/models/shop_item.dart';
+import 'package:shoplogy/models/items/shop_item.dart';
 import 'package:shoplogy/models/users.dart';
 
 /// Contains all Methods to
@@ -52,7 +52,7 @@ class Storage {
       final List<String> l = prefs!.getStringList(_userItemsListKEY)!;
       final Set<ShopItem> items = {};
       for (String s in l) {
-        final item = ShopItem.fromString(s);
+        items.add(ShopItem.fromString(s));
       }
       user.items = items;
     } else {

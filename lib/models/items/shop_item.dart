@@ -1,43 +1,30 @@
-library models;
+library models.items;
 
-import 'package:flutter/material.dart' show IconData, Icons, Image;
+import 'package:flutter/material.dart' show Icons, Image;
+
+import 'item.dart';
 
 /// The Model that represents every single
 /// Item in this App.
-class ShopItem {
+class ShopItem extends Item with ExtendedItemMixin {
   ShopItem({
-    required this.name,
-    required this.pricePerOne,
+    required super.name,
+    required this.pricePerPiece,
     this.description,
     this.images,
-    this.icon,
+    super.icon,
     this.amount = double.infinity,
   });
 
-  /// The Name of this Item
-  final String name;
-
-  /// The Price.
-  /// Should have to digits after the point.
-  final double pricePerOne;
-
-  /// Returns the Price for
-  /// the specified [forAmount] parameter.
-  double price({double forAmount = 1}) {
-    return pricePerOne * forAmount;
-  }
-
-  /// An optional Icon to present this
-  /// Item in the Shop
-  final IconData? icon;
+  @override
+  final double pricePerPiece;
 
   /// A List
   /// of different Images
   /// to present the Item.
   final Set<Image>? images;
 
-  /// A closer and more precise
-  /// Description of this Item.
+  @override
   final String? description;
 
   /// The Amount the User has
@@ -48,17 +35,17 @@ class ShopItem {
   static final Set<ShopItem> allItems = {
     ShopItem(
       name: 'Diamond',
-      pricePerOne: 100.00,
+      pricePerPiece: 100.00,
       icon: Icons.diamond,
     ),
     ShopItem(
       name: 'Clock',
-      pricePerOne: 20.00,
+      pricePerPiece: 20.00,
       icon: Icons.timelapse,
     ),
     ShopItem(
       name: 'Car',
-      pricePerOne: 20000.00,
+      pricePerPiece: 20000.00,
       icon: Icons.car_rental,
     ),
   };

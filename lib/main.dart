@@ -6,7 +6,7 @@ import 'package:modern_themes/modern_themes.dart';
 import 'package:shoplogy/blocs/home_bloc.dart';
 import 'package:shoplogy/blocs/user_bloc.dart';
 import 'package:shoplogy/localizations/translations.dart';
-import 'package:shoplogy/models/shop_item.dart';
+import 'package:shoplogy/models/items/shop_item.dart';
 import 'package:shoplogy/navigation/routes.dart' show Routes;
 import 'package:shoplogy/screens/homescreen.dart';
 import 'package:shoplogy/screens/item_details_screen.dart';

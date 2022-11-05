@@ -1,7 +1,7 @@
 library models;
 
+import 'package:shoplogy/models/items/shop_item.dart';
 import 'package:shoplogy/models/permissions.dart';
-import 'package:shoplogy/models/shop_item.dart';
 
 /// User class for all users
 class User {
@@ -53,6 +53,10 @@ class User {
   /// The Amount of money the user has.
   double money = 0;
 
+  /// The Amount of Gems this User
+  /// owns.
+  int gems = 0;
+
   /// The Current User of this App
   static User? _currentUser;
 
@@ -85,13 +89,15 @@ class User {
     money += amount;
   }
 
+  /// Whether this User already
+  /// owns this Item or not.
   bool hasItem(ShopItem item) {
     return items.contains(item);
   }
 
   /// Buys an Item.
   bool buy(ShopItem item) {
-    final double price = item.price(forAmount: item.amount);
+    final double price = item.price(forAmount: item.amount).toDouble();
     if (money >= price) {
       if (items.contains(item)) {
         final ShopItem i =

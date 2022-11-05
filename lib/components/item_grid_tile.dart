@@ -3,7 +3,7 @@ library components;
 import 'package:flutter/gestures.dart' show DragStartBehavior;
 import 'package:flutter/material.dart';
 import 'package:modern_themes/modern_themes.dart' show Coloring;
-import 'package:shoplogy/models/shop_item.dart';
+import 'package:shoplogy/models/items/item.dart';
 import 'package:shoplogy/navigation/routes.dart';
 
 /// Tile to
@@ -18,7 +18,7 @@ class ItemGridTile extends StatefulWidget {
   });
 
   /// The Item represented.
-  final ShopItem item;
+  final Item item;
 
   @override
   State<StatefulWidget> createState() => _ItemGridTileState();
@@ -63,7 +63,7 @@ class _ItemGridTileState extends State<ItemGridTile> {
                 widget.item.name,
                 style: _nStyle,
               ),
-              Text(widget.item.pricePerOne.toStringAsFixed(2))
+              Text(widget.item.pricePerPiece.toStringAsFixed(2))
             ],
           ),
         ),

@@ -3,7 +3,7 @@ library screens;
 import 'package:flutter/gestures.dart' show DragStartBehavior;
 import 'package:flutter/material.dart';
 import 'package:modern_themes/modern_themes.dart';
-import 'package:shoplogy/models/shop_item.dart';
+import 'package:shoplogy/models/items/shop_item.dart';
 import 'package:shoplogy/models/users.dart';
 import 'package:string_translate/string_translate.dart' show Translate;
 
@@ -52,10 +52,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
       child: Column(
         children: [
           SizedBox(
-            height: MediaQuery
-                .of(context)
-                .size
-                .height / 4,
+            height: MediaQuery.of(context).size.height / 4,
             child: ListView(
               addSemanticIndexes: true,
               addRepaintBoundaries: true,
@@ -109,10 +106,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
   /// User can buy an Item
   SizedBox get _buyButton {
     return SizedBox(
-      width: MediaQuery
-          .of(context)
-          .size
-          .width / 1.2,
+      width: MediaQuery.of(context).size.width / 1.2,
       child: TextButton(
         onPressed: () {
           if (_amount == 0) {
@@ -180,9 +174,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
   /// of this Screen.
   List<SizedBox> get _images {
     final List<SizedBox> l = [];
-    final mq = MediaQuery
-        .of(context)
-        .size;
+    final mq = MediaQuery.of(context).size;
     if (widget.item.images != null) {
       for (Image i in widget.item.images!) {
         l.add(SizedBox(
@@ -233,7 +225,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
     return Padding(
       padding: const EdgeInsets.all(10),
       child: Text(
-        '${widget.item.pricePerOne.toStringAsFixed(2)} €',
+        '${widget.item.pricePerPiece.toStringAsFixed(2)} €',
         textAlign: TextAlign.center,
       ),
     );
