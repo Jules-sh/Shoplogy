@@ -4,16 +4,21 @@ import 'package:bloc_implementation/bloc_implementation.dart' show BlocParent;
 import 'package:flutter/material.dart';
 import 'package:modern_themes/modern_themes.dart';
 import 'package:shoplogy/blocs/home_bloc.dart';
+import 'package:shoplogy/blocs/user_bloc.dart';
 import 'package:shoplogy/localizations/translations.dart';
-import 'package:shoplogy/models/shop_item.dart';
+import 'package:shoplogy/models/items/shop_item.dart';
 import 'package:shoplogy/navigation/routes.dart' show Routes;
 import 'package:shoplogy/screens/homescreen.dart';
 import 'package:shoplogy/screens/item_details_screen.dart';
 import 'package:shoplogy/screens/unknown_screen.dart';
+import 'package:shoplogy/screens/user_screen.dart';
+import 'package:shoplogy/storage/storage.dart';
 import 'package:string_translate/string_translate.dart'
     hide StandardTranslations, Translate;
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Storage.init();
   runApp(const Shoplogy());
 }
 
@@ -84,6 +89,10 @@ class _ShoplogyState extends State<Shoplogy> {
       Routes.homeScreen: (_) => BlocParent(
             bloc: HomeBloc(),
             child: const Homescreen(),
+          ),
+      Routes.userScreen: (_) => BlocParent(
+            bloc: UserBloc(),
+            child: const UserScreen(),
           ),
       Routes.unknownScreen: (_) => const UnknownScreen(),
     };

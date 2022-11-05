@@ -1,3 +1,9 @@
 library models;
 
-abstract class Permission {}
+import 'package:shoplogy/secrets/keys.dart';
+
+abstract class Permission {
+  static bool checkAdminKey(String key) {
+    return AdminKeys.allKeys.contains(key);
+  }
+}

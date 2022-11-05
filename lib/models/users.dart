@@ -1,7 +1,7 @@
 library models;
 
+import 'package:shoplogy/models/items/shop_item.dart';
 import 'package:shoplogy/models/permissions.dart';
-import 'package:shoplogy/models/shop_item.dart';
 
 /// User class for all users
 class User {
@@ -10,25 +10,27 @@ class User {
   User({
     required this.name,
     required this.lastname,
-    required this.items,
     Set<Permission> permissions = const {},
-  });
+  }) {
+    _isAdmin = false;
+  }
 
   /// Admin Constructor used for Admins only
   User.admin({
     required this.name,
     required this.lastname,
-    required this.items,
   }) {
     _permissions = {};
+    _isAdmin = true;
   }
 
   /// An Anonymous User.
   User.anonymous({
     this.name = '',
     this.lastname = '',
-    this.items = const {},
-  });
+  }) {
+    _isAdmin = false;
+  }
 
   /// First Name of the User
   final String name;
@@ -37,13 +39,23 @@ class User {
   final String lastname;
 
   /// All the Items the User has
-  final Set<ShopItem> items;
+  Set<ShopItem> items = {};
 
   /// The Permissions this User has.
   late final Set<Permission> _permissions;
 
+  /// Whether this User is an Admin or not.
+  late final bool _isAdmin;
+
+  /// Whether this User is an Admin or not.
+  bool get isAdmin => _isAdmin;
+
   /// The Amount of money the user has.
   double money = 0;
+
+  /// The Amount of Gems this User
+  /// owns.
+  int gems = 0;
 
   /// The Current User of this App
   static User? _currentUser;
@@ -56,6 +68,12 @@ class User {
   /// the specified [newUser].
   static void changeUser(User newUser) {
     _currentUser = newUser;
+  }
+
+  /// Whether the User
+  /// exists or not.
+  bool get exists {
+    return name.isNotEmpty && lastname.isNotEmpty;
   }
 
   /// Whether the User has the Permission
@@ -71,9 +89,27 @@ class User {
     money += amount;
   }
 
+  /// Whether this User already
+  /// owns this Item or not.
+  bool hasItem(ShopItem item) {
+    return items.contains(item);
+  }
+
   /// Buys an Item.
-  void buy(ShopItem item) {
-    items.add(item);
-    money -= item.price;
+  bool buy(ShopItem item) {
+    final double price = item.price(forAmount: item.amount).toDouble();
+    if (money >= price) {
+      if (items.contains(item)) {
+        final ShopItem i =
+            items.firstWhere((element) => element.name == item.name);
+        i.amount += item.amount;
+      } else {
+        items.add(item);
+      }
+      money -= price;
+      return true;
+    } else {
+      return false;
+    }
   }
 }
