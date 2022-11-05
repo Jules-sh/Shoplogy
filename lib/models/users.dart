@@ -20,7 +20,9 @@ class User {
     required this.name,
     required this.lastname,
   }) {
-    _permissions = {};
+    _permissions = {
+      const MoneyBuyPermission(),
+    };
     _isAdmin = true;
   }
 
@@ -93,6 +95,13 @@ class User {
   /// owns this Item or not.
   bool hasItem(ShopItem item) {
     return items.contains(item);
+  }
+
+  /// Whether the User
+  /// has the Permission to
+  /// do something or not.
+  bool hasPermission(Permission permission) {
+    return _permissions.contains(permission);
   }
 
   /// Buys an Item.

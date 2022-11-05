@@ -5,8 +5,9 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:modern_themes/modern_themes_comps.dart';
 import 'package:shoplogy/blocs/home_bloc.dart';
-import 'package:shoplogy/components/economy_grid_tile.dart';
 import 'package:shoplogy/components/item_grid_tile.dart';
+import 'package:shoplogy/models/items/economy_item.dart';
+import 'package:shoplogy/models/items/item.dart';
 import 'package:shoplogy/models/items/shop_item.dart';
 import 'package:shoplogy/models/users.dart';
 import 'package:shoplogy/navigation/routes.dart';
@@ -182,24 +183,7 @@ class _HomescreenState extends State<Homescreen> {
   /// The Screen to upload something yourself.
   Scrollbar get _economyBody {
     return Scrollbar(
-      child: GridView(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-        ),
-        addAutomaticKeepAlives: true,
-        addRepaintBoundaries: true,
-        addSemanticIndexes: true,
-        clipBehavior: Clip.antiAliasWithSaveLayer,
-        dragStartBehavior: DragStartBehavior.down,
-        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-        reverse: false,
-        physics: const BouncingScrollPhysics(),
-        scrollDirection: Axis.vertical,
-        shrinkWrap: false,
-        children: const <EconomyGridTile>[
-          EconomyGridTile(name: '100 €', price: 10),
-        ],
-      ),
+      child: _gridBuilder(items: EconomyItem.allItems),
     );
   }
 
@@ -242,7 +226,7 @@ class _HomescreenState extends State<Homescreen> {
   /// This is used in all the
   /// Bodies in this Screen.
   Widget _gridBuilder({
-    required Set<ShopItem> items,
+    required Set<Item> items,
   }) {
     if (items.isNotEmpty) {
       return GridView.builder(

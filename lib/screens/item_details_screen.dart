@@ -3,7 +3,10 @@ library screens;
 import 'package:flutter/gestures.dart' show DragStartBehavior;
 import 'package:flutter/material.dart';
 import 'package:modern_themes/modern_themes.dart';
+import 'package:shoplogy/models/items/economy_item.dart';
+import 'package:shoplogy/models/items/item.dart' show Item;
 import 'package:shoplogy/models/items/shop_item.dart';
+import 'package:shoplogy/models/permissions.dart';
 import 'package:shoplogy/models/users.dart';
 import 'package:string_translate/string_translate.dart' show Translate;
 
@@ -18,7 +21,7 @@ class ItemDetailsScreen extends StatefulWidget {
   /// The Item this
   /// Screen has ti be
   /// generated for.
-  final ShopItem item;
+  final Item item;
 
   @override
   State<StatefulWidget> createState() => _ItemDetailsScreenState();
@@ -52,7 +55,10 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
       child: Column(
         children: [
           SizedBox(
-            height: MediaQuery.of(context).size.height / 4,
+            height: MediaQuery
+                .of(context)
+                .size
+                .height / 4,
             child: ListView(
               addSemanticIndexes: true,
               addRepaintBoundaries: true,
@@ -70,7 +76,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
           _price,
           _amountWanted,
           _buyButton,
-          _amountOwned,
+          widget.item is ShopItem ? _amountOwned : Container(),
         ],
       ),
     );
@@ -106,26 +112,68 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
   /// User can buy an Item
   SizedBox get _buyButton {
     return SizedBox(
-      width: MediaQuery.of(context).size.width / 1.2,
+      width: MediaQuery
+          .of(context)
+          .size
+          .width / 1.2,
       child: TextButton(
         onPressed: () {
+          final Item item = widget.item;
           if (_amount == 0) {
             return;
-          } else {
+          } else if (item is ShopItem) {
             setState(() {
-              final i = widget.item;
-              i.amount = _amount;
-              if (User.currentUser.buy(i)) {
+              item.amount = _amount;
+              if (User.currentUser.buy(item)) {
                 return;
               } else {
                 _showNotEnoughMoneyDialog();
               }
             });
+          } else if (item is EconomyItem) {
+            switch (item.type) {
+              case EconomyType.money:
+                if (User.currentUser
+                    .hasPermission(const MoneyBuyPermission())) {
+                  User.currentUser.money += item.value;
+                } else {
+                  _showPermissionDeniedDialog();
+                }
+                break;
+              case EconomyType.gems:
+                if (User.currentUser.hasPermission(const GemBuyPermission())) {
+                  User.currentUser.gems += item.value;
+                } else {
+                  _showPermissionDeniedDialog();
+                }
+                break;
+            }
+          } else {
+            return;
           }
         },
         child: Text('Buy'.tr()),
       ),
     );
+  }
+
+  /// The Dialog shown when the
+  /// User does not have the Permission to do something
+  void _showPermissionDeniedDialog() {
+    showDialog(
+        context: context,
+        builder: (_) {
+          return AlertDialog(
+            title: Text('Permission denied'.tr()),
+            content: Text('You do not have the Permission to do that'.tr()),
+            actions: <TextButton>[
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('Ok'.tr()),
+              )
+            ],
+          );
+        });
   }
 
   /// Dialog shown if the User does
@@ -144,7 +192,8 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
             ),
             TextButton(
                 onPressed: () {
-                  // TODO: add Action Code
+                  Navigator.pop(context);
+                  Navigator.pop(context);
                 },
                 child: Text('Buy money'.tr())),
           ],
@@ -157,7 +206,8 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
   /// of this item.
   Text get _amountOwned {
     final String text;
-    if (User.currentUser.hasItem(widget.item)) {
+    final item = widget.item as ShopItem;
+    if (User.currentUser.hasItem(item)) {
       text = User.currentUser.items
           .where((element) => element == widget.item)
           .first
@@ -173,33 +223,44 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
   /// presented in the first Row
   /// of this Screen.
   List<SizedBox> get _images {
+    final Item item = widget.item;
     final List<SizedBox> l = [];
-    final mq = MediaQuery.of(context).size;
-    if (widget.item.images != null) {
-      for (Image i in widget.item.images!) {
-        l.add(SizedBox(
-          height: mq.height / 4,
-          width: mq.width,
-          child: Center(child: i),
-        ));
+    final mq = MediaQuery
+        .of(context)
+        .size;
+    if (item is ShopItem) {
+      if (item.images != null) {
+        for (Image i in item.images!) {
+          l.add(
+            SizedBox(
+              height: mq.height / 4,
+              width: mq.width,
+              child: Center(child: i),
+            ),
+          );
+        }
       }
-    } else if (widget.item.icon != null) {
-      l.add(SizedBox(
+    }
+    if (item.icon != null) {
+      l.add(
+        SizedBox(
           height: mq.height / 4,
           width: mq.width,
           child: Center(
-            child: Icon(
-              widget.item.icon,
-              size: 200,
-            ),
-          )));
+            child: Icon(item.icon, size: 200),
+          ),
+        ),
+      );
     } else {
-      l.add(SizedBox(
+      l.add(
+        SizedBox(
           height: mq.height / 4,
           width: mq.width,
           child: const Center(
             child: Icon(Icons.shopping_cart),
-          )));
+          ),
+        ),
+      );
     }
     return l;
   }
@@ -225,7 +286,25 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
     return Padding(
       padding: const EdgeInsets.all(10),
       child: Text(
-        '${widget.item.pricePerPiece.toStringAsFixed(2)} €',
+            () {
+          final Item item = widget.item;
+          final String s;
+          if (item is ShopItem) {
+            s = '${item.pricePerPiece.toStringAsFixed(2)} €';
+          } else if (item is EconomyItem) {
+            switch (item.type) {
+              case EconomyType.money:
+                s = '${item.pricePerPiece} ${'Gems'.tr()}';
+                break;
+              case EconomyType.gems:
+                s = '${item.pricePerPiece} Unidentified';
+                break;
+            }
+          } else {
+            s = '';
+          }
+          return s;
+        }(),
         textAlign: TextAlign.center,
       ),
     );
