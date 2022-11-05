@@ -17,6 +17,7 @@ import 'package:string_translate/string_translate.dart'
     hide StandardTranslations, Translate;
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await Storage.init();
   runApp(const Shoplogy());
 }

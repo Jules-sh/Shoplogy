@@ -5,9 +5,9 @@ import 'package:flutter/material.dart' show IconData, Icons, Image;
 /// The Model that represents every single
 /// Item in this App.
 class ShopItem {
-  const ShopItem({
+  ShopItem({
     required this.name,
-    required this.price,
+    required this.pricePerOne,
     this.description,
     this.images,
     this.icon,
@@ -19,7 +19,13 @@ class ShopItem {
 
   /// The Price.
   /// Should have to digits after the point.
-  final double price;
+  final double pricePerOne;
+
+  /// Returns the Price for
+  /// the specified [forAmount] parameter.
+  double price({double forAmount = 1}) {
+    return pricePerOne * forAmount;
+  }
 
   /// An optional Icon to present this
   /// Item in the Shop
@@ -36,24 +42,43 @@ class ShopItem {
 
   /// The Amount the User has
   /// of this Object.
-  final double amount;
+  double amount;
 
   /// All the Items in this App.
   static final Set<ShopItem> allItems = {
-    const ShopItem(
+    ShopItem(
       name: 'Diamond',
-      price: 100.00,
+      pricePerOne: 100.00,
       icon: Icons.diamond,
     ),
-    const ShopItem(
+    ShopItem(
       name: 'Clock',
-      price: 20.00,
+      pricePerOne: 20.00,
       icon: Icons.timelapse,
     ),
-    const ShopItem(
+    ShopItem(
       name: 'Car',
-      price: 20000.00,
+      pricePerOne: 20000.00,
       icon: Icons.car_rental,
     ),
   };
+
+  @override
+  String toString() {
+    return 'name:$name;amount:$amount';
+  }
+
+  factory ShopItem.fromString(String string) {
+    final List<String> l = string.split(';');
+    final List<String> values = [];
+    for (String s in l) {
+      values.add(s.split(':')[1]);
+    }
+    final String name = values[0];
+    final double amount = double.parse(values[1]);
+    final item =
+        ShopItem.allItems.where((element) => element.name == name).first;
+    item.amount = amount;
+    return item;
+  }
 }

@@ -90,8 +90,20 @@ class User {
   }
 
   /// Buys an Item.
-  void buy(ShopItem item) {
-    items.add(item);
-    money -= item.price;
+  bool buy(ShopItem item) {
+    final double price = item.price(forAmount: item.amount);
+    if (money >= price) {
+      if (items.contains(item)) {
+        final ShopItem i =
+            items.firstWhere((element) => element.name == item.name);
+        i.amount += item.amount;
+      } else {
+        items.add(item);
+      }
+      money -= price;
+      return true;
+    } else {
+      return false;
+    }
   }
 }

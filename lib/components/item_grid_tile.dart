@@ -63,7 +63,7 @@ class _ItemGridTileState extends State<ItemGridTile> {
                 widget.item.name,
                 style: _nStyle,
               ),
-              Text(widget.item.price.toStringAsFixed(2))
+              Text(widget.item.pricePerOne.toStringAsFixed(2))
             ],
           ),
         ),
