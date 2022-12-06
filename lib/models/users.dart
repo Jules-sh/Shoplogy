@@ -105,6 +105,7 @@ class User {
   }
 
   /// Buys an Item.
+  /// Returns true if the Item is bought.
   bool buy(ShopItem item) {
     final double price = item.price(forAmount: item.amount).toDouble();
     if (money >= price) {

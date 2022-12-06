@@ -80,7 +80,7 @@ class _ItemGridTileState extends State<ItemGridTile> {
   }
 
   /// Called when
-  /// the Contaienr is
+  /// the Container is
   /// clicked by the User.
   void _onTap() {
     Navigator.pushNamed(

@@ -1,12 +1,13 @@
 library screens;
 
+import 'package:bloc_implementation/bloc_implementation.dart' show BlocParent;
 import 'package:flutter/gestures.dart' show DragStartBehavior;
 import 'package:flutter/material.dart';
 import 'package:modern_themes/modern_themes.dart';
+import 'package:shoplogy/blocs/item_details_bloc.dart';
 import 'package:shoplogy/models/items/economy_item.dart';
 import 'package:shoplogy/models/items/item.dart' show Item;
 import 'package:shoplogy/models/items/shop_item.dart';
-import 'package:shoplogy/models/permissions.dart';
 import 'package:shoplogy/models/users.dart';
 import 'package:string_translate/string_translate.dart' show Translate;
 
@@ -28,10 +29,12 @@ class ItemDetailsScreen extends StatefulWidget {
 }
 
 class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
-  double _amount = 1;
+  ItemDetailsBloc? _bloc;
 
   @override
   Widget build(BuildContext context) {
+    _bloc ??= BlocParent.of(context);
+
     return Scaffold(
       appBar: _appBar,
       body: _body,
@@ -55,10 +58,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
       child: Column(
         children: [
           SizedBox(
-            height: MediaQuery
-                .of(context)
-                .size
-                .height / 4,
+            height: MediaQuery.of(context).size.height / 4,
             child: ListView(
               addSemanticIndexes: true,
               addRepaintBoundaries: true,
@@ -94,13 +94,13 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
       verticalDirection: VerticalDirection.down,
       children: [
         IconButton(
-          onPressed: () => setState(() => _amount--),
+          onPressed: () => setState(() => _bloc!.amount--),
           icon: const Icon(Icons.minimize),
           color: Coloring.contrastColor(Coloring.secondaryColor),
         ),
-        Text(_amount.toStringAsFixed(2)),
+        Text(_bloc!.amount.toStringAsFixed(2)),
         IconButton(
-          onPressed: () => setState(() => _amount++),
+          onPressed: () => setState(() => _bloc!.amount++),
           icon: const Icon(Icons.add),
           color: Coloring.contrastColor(Coloring.secondaryColor),
         ),
@@ -112,46 +112,25 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
   /// User can buy an Item
   SizedBox get _buyButton {
     return SizedBox(
-      width: MediaQuery
-          .of(context)
-          .size
-          .width / 1.2,
+      width: MediaQuery.of(context).size.width / 1.2,
       child: TextButton(
-        onPressed: () {
-          final Item item = widget.item;
-          if (_amount == 0) {
-            return;
-          } else if (item is ShopItem) {
-            setState(() {
-              item.amount = _amount;
-              if (User.currentUser.buy(item)) {
-                return;
-              } else {
-                _showNotEnoughMoneyDialog();
-              }
-            });
-          } else if (item is EconomyItem) {
-            switch (item.type) {
-              case EconomyType.money:
-                if (User.currentUser
-                    .hasPermission(const MoneyBuyPermission())) {
-                  User.currentUser.money += item.value;
-                } else {
-                  _showPermissionDeniedDialog();
-                }
-                break;
-              case EconomyType.gems:
-                if (User.currentUser.hasPermission(const GemBuyPermission())) {
-                  User.currentUser.gems += item.value;
-                } else {
-                  _showPermissionDeniedDialog();
-                }
-                break;
-            }
-          } else {
-            return;
+        onPressed: () => setState(() {
+          // TODO: implement Switch
+          switch (_bloc!.buy(widget.item)) {
+            case BuyResponse.amountZero:
+              break;
+            case BuyResponse.success:
+              break;
+            case BuyResponse.notEnoughMoney:
+              _showNotEnoughMoneyDialog();
+              break;
+            case BuyResponse.permissionDenied:
+              _showPermissionDeniedDialog();
+              break;
+            case BuyResponse.invalidItem:
+              break;
           }
-        },
+        }),
         child: Text('Buy'.tr()),
       ),
     );
@@ -225,9 +204,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
   List<SizedBox> get _images {
     final Item item = widget.item;
     final List<SizedBox> l = [];
-    final mq = MediaQuery
-        .of(context)
-        .size;
+    final mq = MediaQuery.of(context).size;
     if (item is ShopItem) {
       if (item.images != null) {
         for (Image i in item.images!) {
@@ -286,7 +263,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
     return Padding(
       padding: const EdgeInsets.all(10),
       child: Text(
-            () {
+        () {
           final Item item = widget.item;
           final String s;
           if (item is ShopItem) {
