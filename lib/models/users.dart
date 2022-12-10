@@ -2,6 +2,7 @@ library models;
 
 import 'package:shoplogy/models/items/shop_item.dart';
 import 'package:shoplogy/models/permissions.dart';
+import 'package:shoplogy/storage/storage.dart';
 
 /// User class for all users
 class User {
@@ -75,6 +76,7 @@ class User {
   /// Logs the User out of this App
   static void logOut() {
     _currentUser = null;
+    Storage.store();
   }
 
   /// Whether the User
@@ -116,7 +118,7 @@ class User {
     if (money >= price) {
       if (items.contains(item)) {
         final ShopItem i =
-        items.firstWhere((element) => element.name == item.name);
+            items.firstWhere((element) => element.name == item.name);
         i.amount += item.amount;
       } else {
         items.add(item);
