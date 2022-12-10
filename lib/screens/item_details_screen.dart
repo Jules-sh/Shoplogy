@@ -183,7 +183,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
 
   /// The Amount the user owns
   /// of this item.
-  Text get _amountOwned {
+  _DetailsRow get _amountOwned {
     final String text;
     final item = widget.item as ShopItem;
     if (User.currentUser.hasItem(item)) {
@@ -195,7 +195,10 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
     } else {
       text = '0';
     }
-    return Text(text);
+    return _DetailsRow(
+      title: 'Owned:',
+      data: text,
+    );
   }
 
   /// The Images
@@ -259,30 +262,62 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
 
   /// The Widget representing the Price of this
   /// Item.
-  Padding get _price {
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: Text(
-        () {
-          final Item item = widget.item;
-          final String s;
-          if (item is ShopItem) {
-            s = '${item.pricePerPiece.toStringAsFixed(2)} €';
-          } else if (item is EconomyItem) {
-            switch (item.type) {
-              case EconomyType.money:
-                s = '${item.pricePerPiece} ${'Gems'.tr()}';
-                break;
-              case EconomyType.gems:
-                s = '${item.pricePerPiece} Unidentified';
-                break;
-            }
-          } else {
-            s = '';
+  _DetailsRow get _price {
+    return _DetailsRow(
+      title: 'Price',
+      data: () {
+        final Item item = widget.item;
+        final String s;
+        if (item is ShopItem) {
+          s = '${item.pricePerPiece.toStringAsFixed(2)} €';
+        } else if (item is EconomyItem) {
+          switch (item.type) {
+            case EconomyType.money:
+              s = '${item.pricePerPiece} ${'Gems'.tr()}';
+              break;
+            case EconomyType.gems:
+              s = '${item.pricePerPiece} Unidentified';
+              break;
           }
-          return s;
-        }(),
-        textAlign: TextAlign.center,
+        } else {
+          s = '';
+        }
+        return s;
+      }(),
+    );
+  }
+}
+
+/// Represents a single Row of Information
+/// on this Screen
+class _DetailsRow extends StatelessWidget {
+  const _DetailsRow({
+    required this.title,
+    required this.data,
+    Key? key,
+  }) : super(key: key);
+
+  /// The Title of this Row
+  final String title;
+
+  /// The Data presented in this Row
+  final String data;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisSize: MainAxisSize.max,
+        textBaseline: TextBaseline.alphabetic,
+        textDirection: TextDirection.ltr,
+        verticalDirection: VerticalDirection.down,
+        children: <Text>[
+          Text(title),
+          Text(data),
+        ],
       ),
     );
   }

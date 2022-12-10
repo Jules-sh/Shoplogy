@@ -4,6 +4,7 @@ import 'package:bloc_implementation/bloc_implementation.dart' show BlocParent;
 import 'package:flutter/material.dart';
 import 'package:modern_themes/modern_themes.dart';
 import 'package:shoplogy/blocs/home_bloc.dart';
+import 'package:shoplogy/blocs/item_details_bloc.dart';
 import 'package:shoplogy/blocs/user_bloc.dart';
 import 'package:shoplogy/localizations/translations.dart';
 import 'package:shoplogy/models/items/item.dart';
@@ -108,7 +109,10 @@ class _ShoplogyState extends State<Shoplogy> {
 
       switch (settings.name) {
         case Routes.itemDetails:
-          screen = ItemDetailsScreen(item: args as Item);
+          screen = BlocParent(
+            bloc: ItemDetailsBloc(),
+            child: ItemDetailsScreen(item: args as Item),
+          );
           break;
         default:
           screen = const UnknownScreen();
