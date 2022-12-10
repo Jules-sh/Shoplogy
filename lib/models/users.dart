@@ -20,7 +20,9 @@ class User {
     required this.name,
     required this.lastname,
   }) {
-    _permissions = {};
+    _permissions = {
+      const MoneyBuyPermission(),
+    };
     _isAdmin = true;
   }
 
@@ -95,7 +97,15 @@ class User {
     return items.contains(item);
   }
 
+  /// Whether the User
+  /// has the Permission to
+  /// do something or not.
+  bool hasPermission(Permission permission) {
+    return _permissions.contains(permission);
+  }
+
   /// Buys an Item.
+  /// Returns true if the Item is bought.
   bool buy(ShopItem item) {
     final double price = item.price(forAmount: item.amount).toDouble();
     if (money >= price) {

@@ -1,8 +1,12 @@
 library screens;
 
+import 'package:bloc_implementation/bloc_implementation.dart' show BlocParent;
 import 'package:flutter/gestures.dart' show DragStartBehavior;
 import 'package:flutter/material.dart';
 import 'package:modern_themes/modern_themes.dart';
+import 'package:shoplogy/blocs/item_details_bloc.dart';
+import 'package:shoplogy/models/items/economy_item.dart';
+import 'package:shoplogy/models/items/item.dart' show Item;
 import 'package:shoplogy/models/items/shop_item.dart';
 import 'package:shoplogy/models/users.dart';
 import 'package:string_translate/string_translate.dart' show Translate;
@@ -18,17 +22,19 @@ class ItemDetailsScreen extends StatefulWidget {
   /// The Item this
   /// Screen has ti be
   /// generated for.
-  final ShopItem item;
+  final Item item;
 
   @override
   State<StatefulWidget> createState() => _ItemDetailsScreenState();
 }
 
 class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
-  double _amount = 1;
+  ItemDetailsBloc? _bloc;
 
   @override
   Widget build(BuildContext context) {
+    _bloc ??= BlocParent.of(context);
+
     return Scaffold(
       appBar: _appBar,
       body: _body,
@@ -70,7 +76,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
           _price,
           _amountWanted,
           _buyButton,
-          _amountOwned,
+          widget.item is ShopItem ? _amountOwned : Container(),
         ],
       ),
     );
@@ -88,13 +94,13 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
       verticalDirection: VerticalDirection.down,
       children: [
         IconButton(
-          onPressed: () => setState(() => _amount--),
+          onPressed: () => setState(() => _bloc!.amount--),
           icon: const Icon(Icons.minimize),
           color: Coloring.contrastColor(Coloring.secondaryColor),
         ),
-        Text(_amount.toStringAsFixed(2)),
+        Text(_bloc!.amount.toStringAsFixed(2)),
         IconButton(
-          onPressed: () => setState(() => _amount++),
+          onPressed: () => setState(() => _bloc!.amount++),
           icon: const Icon(Icons.add),
           color: Coloring.contrastColor(Coloring.secondaryColor),
         ),
@@ -108,24 +114,45 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
     return SizedBox(
       width: MediaQuery.of(context).size.width / 1.2,
       child: TextButton(
-        onPressed: () {
-          if (_amount == 0) {
-            return;
-          } else {
-            setState(() {
-              final i = widget.item;
-              i.amount = _amount;
-              if (User.currentUser.buy(i)) {
-                return;
-              } else {
-                _showNotEnoughMoneyDialog();
-              }
-            });
+        onPressed: () => setState(() {
+          // TODO: implement Switch
+          switch (_bloc!.buy(widget.item)) {
+            case BuyResponse.amountZero:
+              break;
+            case BuyResponse.success:
+              break;
+            case BuyResponse.notEnoughMoney:
+              _showNotEnoughMoneyDialog();
+              break;
+            case BuyResponse.permissionDenied:
+              _showPermissionDeniedDialog();
+              break;
+            case BuyResponse.invalidItem:
+              break;
           }
-        },
+        }),
         child: Text('Buy'.tr()),
       ),
     );
+  }
+
+  /// The Dialog shown when the
+  /// User does not have the Permission to do something
+  void _showPermissionDeniedDialog() {
+    showDialog(
+        context: context,
+        builder: (_) {
+          return AlertDialog(
+            title: Text('Permission denied'.tr()),
+            content: Text('You do not have the Permission to do that'.tr()),
+            actions: <TextButton>[
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('Ok'.tr()),
+              )
+            ],
+          );
+        });
   }
 
   /// Dialog shown if the User does
@@ -144,7 +171,8 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
             ),
             TextButton(
                 onPressed: () {
-                  // TODO: add Action Code
+                  Navigator.pop(context);
+                  Navigator.pop(context);
                 },
                 child: Text('Buy money'.tr())),
           ],
@@ -155,9 +183,10 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
 
   /// The Amount the user owns
   /// of this item.
-  Text get _amountOwned {
+  _DetailsRow get _amountOwned {
     final String text;
-    if (User.currentUser.hasItem(widget.item)) {
+    final item = widget.item as ShopItem;
+    if (User.currentUser.hasItem(item)) {
       text = User.currentUser.items
           .where((element) => element == widget.item)
           .first
@@ -166,40 +195,52 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
     } else {
       text = '0';
     }
-    return Text(text);
+    return _DetailsRow(
+      title: 'Owned:',
+      data: text,
+    );
   }
 
   /// The Images
   /// presented in the first Row
   /// of this Screen.
   List<SizedBox> get _images {
+    final Item item = widget.item;
     final List<SizedBox> l = [];
     final mq = MediaQuery.of(context).size;
-    if (widget.item.images != null) {
-      for (Image i in widget.item.images!) {
-        l.add(SizedBox(
-          height: mq.height / 4,
-          width: mq.width,
-          child: Center(child: i),
-        ));
+    if (item is ShopItem) {
+      if (item.images != null) {
+        for (Image i in item.images!) {
+          l.add(
+            SizedBox(
+              height: mq.height / 4,
+              width: mq.width,
+              child: Center(child: i),
+            ),
+          );
+        }
       }
-    } else if (widget.item.icon != null) {
-      l.add(SizedBox(
+    }
+    if (item.icon != null) {
+      l.add(
+        SizedBox(
           height: mq.height / 4,
           width: mq.width,
           child: Center(
-            child: Icon(
-              widget.item.icon,
-              size: 200,
-            ),
-          )));
+            child: Icon(item.icon, size: 200),
+          ),
+        ),
+      );
     } else {
-      l.add(SizedBox(
+      l.add(
+        SizedBox(
           height: mq.height / 4,
           width: mq.width,
           child: const Center(
             child: Icon(Icons.shopping_cart),
-          )));
+          ),
+        ),
+      );
     }
     return l;
   }
@@ -221,12 +262,62 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
 
   /// The Widget representing the Price of this
   /// Item.
-  Padding get _price {
+  _DetailsRow get _price {
+    return _DetailsRow(
+      title: 'Price',
+      data: () {
+        final Item item = widget.item;
+        final String s;
+        if (item is ShopItem) {
+          s = '${item.pricePerPiece.toStringAsFixed(2)} €';
+        } else if (item is EconomyItem) {
+          switch (item.type) {
+            case EconomyType.money:
+              s = '${item.pricePerPiece} ${'Gems'.tr()}';
+              break;
+            case EconomyType.gems:
+              s = '${item.pricePerPiece} Unidentified';
+              break;
+          }
+        } else {
+          s = '';
+        }
+        return s;
+      }(),
+    );
+  }
+}
+
+/// Represents a single Row of Information
+/// on this Screen
+class _DetailsRow extends StatelessWidget {
+  const _DetailsRow({
+    required this.title,
+    required this.data,
+    Key? key,
+  }) : super(key: key);
+
+  /// The Title of this Row
+  final String title;
+
+  /// The Data presented in this Row
+  final String data;
+
+  @override
+  Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(10),
-      child: Text(
-        '${widget.item.pricePerPiece.toStringAsFixed(2)} €',
-        textAlign: TextAlign.center,
+      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisSize: MainAxisSize.max,
+        textBaseline: TextBaseline.alphabetic,
+        textDirection: TextDirection.ltr,
+        verticalDirection: VerticalDirection.down,
+        children: <Text>[
+          Text(title),
+          Text(data),
+        ],
       ),
     );
   }

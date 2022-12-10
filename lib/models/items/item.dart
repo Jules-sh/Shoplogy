@@ -1,6 +1,6 @@
 library models.items;
 
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' show IconData;
 
 /// The Superclass for all Items.
 abstract class Item {

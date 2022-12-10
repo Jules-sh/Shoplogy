@@ -14,7 +14,10 @@ class ShopItem extends Item with ExtendedItemMixin {
     this.images,
     super.icon,
     this.amount = double.infinity,
-  });
+  }) : assert(
+          (icon != null && images == null) || (icon == null && images != null),
+          'You can eigther pass iamges or an Icon',
+        );
 
   @override
   final double pricePerPiece;
