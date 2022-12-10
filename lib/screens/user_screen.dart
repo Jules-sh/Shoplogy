@@ -288,6 +288,16 @@ you can add it to enter admin mode.
             ),
           ],
         ),
+        const Spacer(),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 17.5),
+          child: ElevatedButton(
+            onPressed: () {
+              setState(() => User.logOut());
+            },
+            child: Text('Log out'.tr()),
+          ),
+        ),
       ],
     );
   }

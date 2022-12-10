@@ -72,6 +72,11 @@ class User {
     _currentUser = newUser;
   }
 
+  /// Logs the User out of this App
+  static void logOut() {
+    _currentUser = null;
+  }
+
   /// Whether the User
   /// exists or not.
   bool get exists {
@@ -111,7 +116,7 @@ class User {
     if (money >= price) {
       if (items.contains(item)) {
         final ShopItem i =
-            items.firstWhere((element) => element.name == item.name);
+        items.firstWhere((element) => element.name == item.name);
         i.amount += item.amount;
       } else {
         items.add(item);
