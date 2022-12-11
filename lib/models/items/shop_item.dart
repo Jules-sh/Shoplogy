@@ -10,7 +10,7 @@ class ShopItem extends Item with ExtendedItemMixin {
   ShopItem({
     required super.name,
     required this.pricePerPiece,
-    this.description,
+    this.description = 'No Description provided',
     this.images,
     super.icon,
     this.amount = double.infinity,
@@ -28,7 +28,7 @@ class ShopItem extends Item with ExtendedItemMixin {
   final Set<Image>? images;
 
   @override
-  final String? description;
+  final String description;
 
   /// The Amount the User has
   /// of this Object.

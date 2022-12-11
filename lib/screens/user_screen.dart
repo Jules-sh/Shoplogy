@@ -291,18 +291,21 @@ you can add it to enter admin mode.
         ),
         const Spacer(),
         Padding(
-          padding: const EdgeInsets.only(bottom: 17.5),
-          child: ElevatedButton(
-            onPressed: () {
-              setState(() {
-                if (_bloc!.logOut()) {
-                  return;
-                } else {
-                  // TODO: Add Error Code
-                }
-              });
-            },
-            child: Text('Log out'.tr()),
+          padding: const EdgeInsets.only(bottom: 25),
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width / 1.2,
+            child: ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  if (_bloc!.logOut()) {
+                    return;
+                  } else {
+                    // TODO: Add Error Code
+                  }
+                });
+              },
+              child: Text('Log out'.tr()),
+            ),
           ),
         ),
       ],
