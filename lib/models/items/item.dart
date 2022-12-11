@@ -6,11 +6,16 @@ import 'package:flutter/material.dart' show IconData;
 abstract class Item {
   const Item({
     required this.name,
+    this.description = 'No Description provided',
     this.icon,
   });
 
   /// The Name of this Item
   final String name;
+
+  /// A closer and more precise description of this
+  /// Item.
+  final String description;
 
   /// The Price for one single piece
   /// of this Item.
@@ -25,13 +30,4 @@ abstract class Item {
   num price({num forAmount = 1}) {
     return pricePerPiece * forAmount;
   }
-}
-
-/// A Mixin to
-/// add extra Fields to your Item
-/// Class
-mixin ExtendedItemMixin {
-  /// A closer and more precise description of this
-  /// Item.
-  abstract final String? description;
 }

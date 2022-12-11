@@ -78,6 +78,7 @@ class _HomescreenState extends State<Homescreen> {
         textCapitalization: TextCapitalization.words,
         textDirection: TextDirection.ltr,
         textInputAction: TextInputAction.search,
+        style: const TextStyle(color: Colors.white),
         toolbarOptions: const ToolbarOptions(
           copy: true,
           cut: true,

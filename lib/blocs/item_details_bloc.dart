@@ -55,16 +55,16 @@ class ItemDetailsBloc extends Bloc {
       }
     } else if (item is EconomyItem) {
       switch (item.type) {
-        case EconomyType.money:
-          if (User.currentUser.hasPermission(const MoneyBuyPermission())) {
+        case EconomyType.credits:
+          if (User.currentUser.hasPermission(const CreditsBuyPermission())) {
             User.currentUser.money += item.value;
             response = BuyResponse.success;
           } else {
             response = BuyResponse.permissionDenied;
           }
           break;
-        case EconomyType.gems:
-          if (User.currentUser.hasPermission(const GemBuyPermission())) {
+        case EconomyType.money:
+          if (User.currentUser.hasPermission(const MoneyBuyPermission())) {
             User.currentUser.gems += item.value;
             response = BuyResponse.success;
           } else {

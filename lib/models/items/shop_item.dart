@@ -6,11 +6,10 @@ import 'item.dart';
 
 /// The Model that represents every single
 /// Item in this App.
-class ShopItem extends Item with ExtendedItemMixin {
+class ShopItem extends Item {
   ShopItem({
     required super.name,
     required this.pricePerPiece,
-    this.description = 'No Description provided',
     this.images,
     super.icon,
     this.amount = double.infinity,
@@ -26,9 +25,6 @@ class ShopItem extends Item with ExtendedItemMixin {
   /// of different Images
   /// to present the Item.
   final Set<Image>? images;
-
-  @override
-  final String description;
 
   /// The Amount the User has
   /// of this Object.

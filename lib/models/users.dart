@@ -22,7 +22,7 @@ class User {
     required this.lastname,
   }) {
     _permissions = {
-      const MoneyBuyPermission(),
+      const CreditsBuyPermission(),
     };
     _isAdmin = true;
   }

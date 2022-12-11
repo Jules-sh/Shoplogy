@@ -20,7 +20,7 @@ class ItemDetailsScreen extends StatefulWidget {
   });
 
   /// The Item this
-  /// Screen has ti be
+  /// Screen has to be
   /// generated for.
   final Item item;
 
@@ -58,7 +58,10 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
       child: Column(
         children: [
           SizedBox(
-            height: MediaQuery.of(context).size.height / 4,
+            height: MediaQuery
+                .of(context)
+                .size
+                .height / 4,
             child: ListView(
               addSemanticIndexes: true,
               addRepaintBoundaries: true,
@@ -98,7 +101,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
       children: [
         IconButton(
           onPressed:
-              _bloc!.amount > 1 ? () => setState(() => _bloc!.amount--) : null,
+          _bloc!.amount > 1 ? () => setState(() => _bloc!.amount--) : null,
           icon: const Icon(Icons.minimize),
           color: Coloring.contrastColor(Coloring.secondaryColor),
         ),
@@ -116,42 +119,86 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
   /// of the Item if the Item
   /// Type provides it.
   Text get _description {
-    final Item item = widget.item;
-    final String text;
-    if (item is ShopItem) {
-      text = item.description;
-    } else {
-      text = '';
-    }
-    return Text(text);
+    return Text(widget.item.description);
   }
 
   /// The Button with which the
   /// User can buy an Item
   SizedBox get _buyButton {
     return SizedBox(
-      width: MediaQuery.of(context).size.width / 1.2,
+      width: MediaQuery
+          .of(context)
+          .size
+          .width / 1.2,
       child: TextButton(
-        onPressed: () => setState(() {
-          // TODO: implement Switch
-          switch (_bloc!.buy(widget.item)) {
-            case BuyResponse.amountZero:
-              break;
-            case BuyResponse.success:
-              break;
-            case BuyResponse.notEnoughMoney:
-              _showNotEnoughMoneyDialog();
-              break;
-            case BuyResponse.permissionDenied:
-              _showPermissionDeniedDialog();
-              break;
-            case BuyResponse.invalidItem:
-              break;
-          }
-        }),
+        onPressed: () {
+          _showConfirmationDialog();
+          setState(() {
+            // TODO: implement Switch
+            switch (_bloc!.buy(widget.item)) {
+              case BuyResponse.amountZero:
+              // Cannot happen anymore.
+                break;
+              case BuyResponse.success:
+                break;
+              case BuyResponse.notEnoughMoney:
+                _showNotEnoughMoneyDialog();
+                break;
+              case BuyResponse.permissionDenied:
+                _showPermissionDeniedDialog();
+                break;
+              case BuyResponse.invalidItem:
+                _showErrorDialog();
+                break;
+            }
+          });
+        },
         child: Text('Buy'.tr()),
       ),
     );
+  }
+
+  Future<bool> _showConfirmationDialog() async {
+    bool result = false;
+    await showModalBottomSheet(
+        context: context,
+        builder: (_) {
+          return BottomSheet(
+            clipBehavior: Clip.antiAliasWithSaveLayer,
+            enableDrag: true,
+            onClosing: () {
+              result = false;
+            },
+            builder: (_) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                textBaseline: TextBaseline.alphabetic,
+
+              );
+            },
+          );
+        }).then((value) => (value) => );
+    return result;
+  }
+
+  /// Dialog shown when an Error occurred
+  void _showErrorDialog() {
+    showDialog(
+        context: context,
+        builder: (_) {
+          return AlertDialog(
+            title: Text('Error'.tr()),
+            content: Text('Sorry, something went wrong.'.tr()),
+            actions: <TextButton>[
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('It\'s ok'.tr()),
+              )
+            ],
+          );
+        });
   }
 
   /// The Dialog shown when the
@@ -181,7 +228,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
       builder: (_) {
         return AlertDialog(
           title: Text('Not enough Money'.tr()),
-          content: Text('You don\'t have anough money to buy this Item.'.tr()),
+          content: Text('You don\'t have enough money to buy this Item.'.tr()),
           actions: <TextButton>[
             TextButton(
               onPressed: () => Navigator.pop(context),
@@ -226,7 +273,9 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
   List<SizedBox> get _images {
     final Item item = widget.item;
     final List<SizedBox> l = [];
-    final mq = MediaQuery.of(context).size;
+    final mq = MediaQuery
+        .of(context)
+        .size;
     if (item is ShopItem) {
       if (item.images != null) {
         for (Image i in item.images!) {
@@ -288,13 +337,13 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
         final Item item = widget.item;
         final String s;
         if (item is ShopItem) {
-          s = '${item.pricePerPiece.toStringAsFixed(2)} €';
+          s = '${item.pricePerPiece.toStringAsFixed(2)} Cr';
         } else if (item is EconomyItem) {
           switch (item.type) {
-            case EconomyType.money:
-              s = '${item.pricePerPiece} ${'Gems'.tr()}';
+            case EconomyType.credits:
+              s = '${item.pricePerPiece} ${'€'.tr()}';
               break;
-            case EconomyType.gems:
+            case EconomyType.money:
               s = '${item.pricePerPiece} Unidentified';
               break;
           }
