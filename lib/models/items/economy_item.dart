@@ -2,11 +2,11 @@ library models.items;
 
 import 'package:flutter/material.dart' show Icons;
 
-import 'item.dart' hide ExtendedItemMixin;
+import 'item.dart';
 
 enum EconomyType {
+  credits,
   money,
-  gems,
 }
 
 /// The Class for all Economy Items.
@@ -18,7 +18,7 @@ class EconomyItem extends Item {
     required this.pricePerPiece,
     required this.value,
     super.icon,
-    this.type = EconomyType.money,
+    this.type = EconomyType.credits,
   });
 
   @override
@@ -35,11 +35,11 @@ class EconomyItem extends Item {
   /// available in this App.
   static final Set<EconomyItem> allItems = {
     const EconomyItem(
-      name: 'Money',
+      name: 'Credits',
       pricePerPiece: 10,
       value: 100,
       icon: Icons.attach_money,
-      type: EconomyType.money,
+      type: EconomyType.credits,
     )
   };
 }

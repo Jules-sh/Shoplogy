@@ -4,6 +4,7 @@ import 'package:flutter/gestures.dart' show DragStartBehavior;
 import 'package:flutter/material.dart';
 import 'package:modern_themes/modern_themes.dart' show Coloring;
 import 'package:shoplogy/models/items/item.dart';
+import 'package:shoplogy/models/items/shop_item.dart';
 import 'package:shoplogy/navigation/routes.dart';
 
 /// Tile to
@@ -63,7 +64,8 @@ class _ItemGridTileState extends State<ItemGridTile> {
                 widget.item.name,
                 style: _nStyle,
               ),
-              Text(widget.item.pricePerPiece.toStringAsFixed(2))
+              Text(
+                  '${widget.item.pricePerPiece.toStringAsFixed(2)} ${widget.item is ShopItem ? 'Cr' : '€'}'),
             ],
           ),
         ),

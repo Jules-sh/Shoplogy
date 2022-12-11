@@ -14,12 +14,12 @@ abstract class Permission {
   }
 }
 
-/// The Permission to buy money
-class MoneyBuyPermission extends Permission {
-  const MoneyBuyPermission();
+/// The Permission to buy Credits
+class CreditsBuyPermission extends Permission {
+  const CreditsBuyPermission();
 }
 
-/// The Permission to buy gems.
-class GemBuyPermission extends Permission {
-  const GemBuyPermission();
+/// The Permission to buy Money.
+class MoneyBuyPermission extends Permission {
+  const MoneyBuyPermission();
 }
