@@ -6,7 +6,7 @@ import 'package:shoplogy/models/users.dart';
 import 'package:shoplogy/storage/storage.dart';
 
 class UserBloc extends Bloc {
-  bool loggingIn = false;
+  bool processinglogging = false;
   String name = '';
   String lastname = '';
   String adminKey = '';
@@ -14,6 +14,7 @@ class UserBloc extends Bloc {
   /// A Method to
   /// log in and create a new User.
   bool logIn() {
+    processinglogging = true;
     final User user;
     if (adminKey.isNotEmpty) {
       if (Permission.checkAdminKey(adminKey)) {
@@ -32,7 +33,15 @@ class UserBloc extends Bloc {
     }
     User.changeUser(user);
     Storage.store();
-    loggingIn = false;
+    processinglogging = false;
+    return true;
+  }
+
+  bool logOut() {
+    processinglogging = true;
+    User.logOut();
+    Storage.store();
+    processinglogging = false;
     return true;
   }
 

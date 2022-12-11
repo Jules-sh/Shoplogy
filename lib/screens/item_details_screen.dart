@@ -73,10 +73,13 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
             ),
           ),
           _title,
+          _description,
+          const Spacer(),
           _price,
           _amountWanted,
           _buyButton,
           widget.item is ShopItem ? _amountOwned : Container(),
+          const SizedBox(height: 50),
         ],
       ),
     );
@@ -84,7 +87,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
 
   /// The Amount the User wants
   /// to buy
-  Widget get _amountWanted {
+  Row get _amountWanted {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -94,7 +97,8 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
       verticalDirection: VerticalDirection.down,
       children: [
         IconButton(
-          onPressed: () => setState(() => _bloc!.amount--),
+          onPressed:
+              _bloc!.amount > 1 ? () => setState(() => _bloc!.amount--) : null,
           icon: const Icon(Icons.minimize),
           color: Coloring.contrastColor(Coloring.secondaryColor),
         ),
@@ -106,6 +110,20 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
         ),
       ],
     );
+  }
+
+  /// Returns the Description
+  /// of the Item if the Item
+  /// Type provides it.
+  Text get _description {
+    final Item item = widget.item;
+    final String text;
+    if (item is ShopItem) {
+      text = item.description;
+    } else {
+      text = '';
+    }
+    return Text(text);
   }
 
   /// The Button with which the
@@ -170,11 +188,12 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
               child: Text('Ok'.tr()),
             ),
             TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  Navigator.pop(context);
-                },
-                child: Text('Buy money'.tr())),
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.pop(context);
+              },
+              child: Text('Buy money'.tr()),
+            ),
           ],
         );
       },

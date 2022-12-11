@@ -46,7 +46,7 @@ class _UserScreenState extends State<UserScreen> {
         borderRadius: BorderRadius.all(Radius.zero),
       ),
       automaticallyImplyLeading: true,
-      title: Text(_bloc!.loggingIn ? 'Log in'.tr() : 'User'.tr()),
+      title: Text(_bloc!.processinglogging ? 'Log in'.tr() : 'User'.tr()),
     );
   }
 
@@ -73,7 +73,8 @@ class _UserScreenState extends State<UserScreen> {
         mainAxisSize: MainAxisSize.min,
         textBaseline: TextBaseline.alphabetic,
         verticalDirection: VerticalDirection.down,
-        children: _bloc!.loggingIn ? _logInChildren : _anonymousChildren,
+        children:
+            _bloc!.processinglogging ? _logInChildren : _anonymousChildren,
       ),
     );
   }
@@ -98,7 +99,7 @@ class _UserScreenState extends State<UserScreen> {
           clipBehavior: Clip.antiAliasWithSaveLayer,
           onPressed: () {
             setState(() {
-              _bloc!.loggingIn = true;
+              _bloc!.processinglogging = true;
             });
           },
           child: Text('Log in'.tr()),
@@ -161,7 +162,7 @@ you can add it to enter admin mode.
               clipBehavior: Clip.antiAliasWithSaveLayer,
               onPressed: () {
                 setState(() {
-                  _bloc!.loggingIn = false;
+                  _bloc!.processinglogging = false;
                 });
               },
               child: Text('Cancel'.tr()),
@@ -287,6 +288,25 @@ you can add it to enter admin mode.
               subtitle: Text(u.isAdmin ? 'Admin'.tr() : 'Normal'.tr()),
             ),
           ],
+        ),
+        const Spacer(),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 25),
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width / 1.2,
+            child: ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  if (_bloc!.logOut()) {
+                    return;
+                  } else {
+                    // TODO: Add Error Code
+                  }
+                });
+              },
+              child: Text('Log out'.tr()),
+            ),
+          ),
         ),
       ],
     );

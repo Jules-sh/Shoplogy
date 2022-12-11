@@ -2,6 +2,7 @@ library models;
 
 import 'package:shoplogy/models/items/shop_item.dart';
 import 'package:shoplogy/models/permissions.dart';
+import 'package:shoplogy/storage/storage.dart';
 
 /// User class for all users
 class User {
@@ -70,6 +71,12 @@ class User {
   /// the specified [newUser].
   static void changeUser(User newUser) {
     _currentUser = newUser;
+  }
+
+  /// Logs the User out of this App
+  static void logOut() {
+    _currentUser = null;
+    Storage.store();
   }
 
   /// Whether the User
