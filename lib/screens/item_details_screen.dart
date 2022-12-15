@@ -58,10 +58,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
       child: Column(
         children: [
           SizedBox(
-            height: MediaQuery
-                .of(context)
-                .size
-                .height / 4,
+            height: MediaQuery.of(context).size.height / 4,
             child: ListView(
               addSemanticIndexes: true,
               addRepaintBoundaries: true,
@@ -101,7 +98,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
       children: [
         IconButton(
           onPressed:
-          _bloc!.amount > 1 ? () => setState(() => _bloc!.amount--) : null,
+              _bloc!.amount > 1 ? () => setState(() => _bloc!.amount--) : null,
           icon: const Icon(Icons.minimize),
           color: Coloring.contrastColor(Coloring.secondaryColor),
         ),
@@ -126,32 +123,32 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
   /// User can buy an Item
   SizedBox get _buyButton {
     return SizedBox(
-      width: MediaQuery
-          .of(context)
-          .size
-          .width / 1.2,
+      width: MediaQuery.of(context).size.width / 1.2,
       child: TextButton(
-        onPressed: () {
-          _showConfirmationDialog();
-          setState(() {
-            // TODO: implement Switch
-            switch (_bloc!.buy(widget.item)) {
-              case BuyResponse.amountZero:
-              // Cannot happen anymore.
-                break;
-              case BuyResponse.success:
-                break;
-              case BuyResponse.notEnoughMoney:
-                _showNotEnoughMoneyDialog();
-                break;
-              case BuyResponse.permissionDenied:
-                _showPermissionDeniedDialog();
-                break;
-              case BuyResponse.invalidItem:
-                _showErrorDialog();
-                break;
-            }
-          });
+        onPressed: () async {
+          if (await _showConfirmationDialog()) {
+            setState(() {
+              // TODO: implement Switch
+              switch (_bloc!.buy(widget.item)) {
+                case BuyResponse.amountZero:
+                  // Cannot happen anymore.
+                  break;
+                case BuyResponse.success:
+                  return;
+                case BuyResponse.notEnoughMoney:
+                  _showNotEnoughMoneyDialog();
+                  break;
+                case BuyResponse.permissionDenied:
+                  _showPermissionDeniedDialog();
+                  break;
+                case BuyResponse.invalidItem:
+                  _showErrorDialog();
+                  break;
+              }
+            });
+          } else {
+            return;
+          }
         },
         child: Text('Buy'.tr()),
       ),
@@ -160,7 +157,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
 
   Future<bool> _showConfirmationDialog() async {
     bool result = false;
-    await showModalBottomSheet(
+    await showModalBottomSheet<bool>(
         context: context,
         builder: (_) {
           return BottomSheet(
@@ -175,11 +172,21 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.max,
                 textBaseline: TextBaseline.alphabetic,
-
+                children: [
+                  Text('Do you really want to buy this Item?'.tr()),
+                  TextButton(
+                    onPressed: () => result = true,
+                    child: Text('Confirm'.tr()),
+                  ),
+                  TextButton(
+                    onPressed: () => result = false,
+                    child: Text('Cancel'.tr()),
+                  )
+                ],
               );
             },
           );
-        }).then((value) => (value) => );
+        }).then((value) => );
     return result;
   }
 
@@ -273,9 +280,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
   List<SizedBox> get _images {
     final Item item = widget.item;
     final List<SizedBox> l = [];
-    final mq = MediaQuery
-        .of(context)
-        .size;
+    final mq = MediaQuery.of(context).size;
     if (item is ShopItem) {
       if (item.images != null) {
         for (Image i in item.images!) {
